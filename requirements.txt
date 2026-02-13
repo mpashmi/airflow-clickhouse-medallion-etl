@@ -1,0 +1,14 @@
+# ── Airflow + Providers ───────────────────────────────────────────────────────
+apache-airflow==2.7.2
+apache-airflow-providers-postgres>=5.7.0
+apache-airflow-providers-amazon>=8.0.0
+
+# ── ClickHouse ────────────────────────────────────────────────────────────────
+airflow-clickhouse-plugin>=1.3.0
+clickhouse-driver>=0.2.6
+
+# ── Data format ───────────────────────────────────────────────────────────────
+pyarrow>=14.0.0
+
+# ── Standard library only (no extra packages) ────────────────────────────────
+# logging, pathlib, datetime, functools, random, string — all stdlib
