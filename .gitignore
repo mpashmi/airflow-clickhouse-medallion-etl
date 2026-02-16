@@ -33,6 +33,10 @@ Thumbs.db
 # ── Personal / local-only docs ────────────────────────────────────────────────
 ARTICLE.md
 
+# ── Local config with real credentials (never push) ─────────────────────────
+.env.example
+dags/common/config.py
+
 # ── Deployment logs ───────────────────────────────────────────────────────────
 deploy.log
 *.log

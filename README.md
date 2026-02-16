@@ -135,6 +135,27 @@ dags/
 
 **23 SQL files** — every SQL statement lives in `.sql` files, rendered at runtime via `db.render_sql()`. No SQL in Python strings.
 
+### Why This Many Files?
+
+This is the **repository pattern** — the standard in Django, Spring Boot, dbt, and any Airflow project at scale. Each layer owns its own database logic; tasks never touch SQL directly.
+
+**The alternative** (1-2 large files) would mean 2,000+ lines mixing ClickHouse, Aurora, S3, validation, and Airflow context — impossible to test, debug, or maintain independently.
+
+**How to navigate in 2 minutes:**
+
+1. Open `clickhouse_incremental_etl_dag.py` — see all 15 tasks in order
+2. Click any task → goes to `tasks.py` → one function, clear name, no SQL
+3. That function calls a `repository.py` → actual database logic
+4. SQL lives in `.sql` files next to each repository → readable without Python
+
+| File | Role | Why separate |
+|------|------|-------------|
+| `config.py` | All constants in one place | Change a table name once, not in 10 files |
+| `db.py` | Shared DB helpers | Without it, 50+ lines repeated across 5 repos |
+| `tasks.py` | Airflow glue (XCom, context) | Zero business logic — swap Airflow for anything |
+| `quality.py` | Cross-layer validation | Crosses all layers — can't live inside any one repo |
+| `*/repository.py` | One per layer | Test, deploy, debug each layer independently |
+
 ---
 
 ## Key Design Decisions
