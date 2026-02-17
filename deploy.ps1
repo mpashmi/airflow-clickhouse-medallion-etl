@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
     Safe deploy script for Airflow DAGs to S3.
-    Uploads files only — NEVER deletes from the shared S3 bucket.
+    Uploads files only - NEVER deletes from the shared S3 bucket.
 
 .DESCRIPTION
     This script syncs local DAGs to your S3 DAG bucket
@@ -39,7 +39,7 @@ if (-not $S3_BUCKET) {
 # ── Safety: block any --delete usage ──────────────────────────────────────────
 Write-Host ""
 Write-Host "============================================" -ForegroundColor Cyan
-Write-Host "  SAFE DEPLOY — upload only, never delete   " -ForegroundColor Cyan
+Write-Host "  SAFE DEPLOY - upload only, never delete   " -ForegroundColor Cyan
 Write-Host "============================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Source:  $LOCAL_DAGS" -ForegroundColor Gray
@@ -58,7 +58,7 @@ $dryRunOutput = aws s3 sync $LOCAL_DAGS $S3_BUCKET `
     --dryrun 2>&1
 
 if (-not $dryRunOutput) {
-    Write-Host "Nothing to upload — S3 is already up to date." -ForegroundColor Green
+    Write-Host "Nothing to upload - S3 is already up to date." -ForegroundColor Green
     exit 0
 }
 
@@ -66,7 +66,7 @@ Write-Host "Files to upload:" -ForegroundColor Yellow
 $dryRunOutput | ForEach-Object { Write-Host "  $_" -ForegroundColor White }
 Write-Host ""
 
-# ── Step 2: Safety check — confirm no deletes ────────────────────────────────
+# -- Step 2: Safety check - confirm no deletes ────────────────────────────────
 $deleteLines = $dryRunOutput | Where-Object { $_ -match "delete:" }
 if ($deleteLines) {
     Write-Host "ERROR: Delete operations detected! This should never happen." -ForegroundColor Red
@@ -105,6 +105,6 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "Deploy successful!" -ForegroundColor Green
     Write-Host "Logged to $LOG_FILE" -ForegroundColor Gray
 } else {
-    Write-Host "Deploy FAILED — check AWS credentials and connectivity." -ForegroundColor Red
+    Write-Host "Deploy FAILED - check AWS credentials and connectivity." -ForegroundColor Red
     exit 1
 }

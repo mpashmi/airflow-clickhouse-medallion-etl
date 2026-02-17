@@ -45,10 +45,22 @@ def generate_events(
 
     for i in range(num_rows):
         offset = timedelta(seconds=random.randint(0, 3599))
+
+        # ~10% dirty rows to exercise the quarantine pipeline
+        roll = random.random()
+        if roll < 0.05:
+            eid, uname = "", _random_name()          # empty event_id
+        elif roll < 0.08:
+            eid, uname = f"{batch_id}_{i}", ""       # empty user_name
+        elif roll < 0.10:
+            eid, uname = "", ""                       # both empty
+        else:
+            eid, uname = f"{batch_id}_{i}", _random_name()
+
         rows.append(
             {
-                "event_id": f"{batch_id}_{i}",
-                "user_name": _random_name(),
+                "event_id": eid,
+                "user_name": uname,
                 "category": random.choice(EVENT_CATEGORIES),
                 "source": random.choice(EVENT_SOURCES),
                 "value": round(random.uniform(0, 500), 2),
